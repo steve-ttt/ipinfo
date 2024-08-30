@@ -12,12 +12,13 @@ A simple C++ program that retrieves and parses IP information from ipinfo.io usi
 
 1. Make sure you have Boost installed on your system.
    1. Debian based systems can install with: sudo apt-get install libboost-all-dev
-   2. Red Hat / Fedora systems: dnf install boost.x86_64 
-2. Compile the code using the provided Makefile:
+   2. Red Hat / Fedora systems: dnf install boost.x86_64
+2. Copy the "include/rapidjson" into this project directory
+3. Compile the code using the provided Makefile:
    ```bash
    make 
    ```
-3. Install with:
+4. Install with:
     ```bash
     make install
     ```
@@ -25,6 +26,8 @@ A simple C++ program that retrieves and parses IP information from ipinfo.io usi
 Simply run the compiled executable:
 ```
 ./ipinfo
+or
+make run
 ```
 ## Output
 The program will print the following IP information retrieved from ipinfo.io:
