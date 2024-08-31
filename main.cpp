@@ -3,6 +3,8 @@
 #include "ipinfo.hpp"
 #include "rapidjson/document.h"
 
+using namespace std;
+
 int main() {
 
     std::string result = pullData();
@@ -11,40 +13,27 @@ int main() {
     size_t start = result.find('{'); // Find the start of JSON
     size_t end = result.rfind('}');   // Find the end of JSON
 
-    if(start != std::string::npos && end != std::string::npos) {
+    if (start != std::string::npos && end != std::string::npos) {
         json = result.substr(start, end - start + 1); // Extract JSON
         //printf("json data: %s\n", json.c_str());
     } else {
         printf("Failed to find valid JSON\n");
+        return 1;
     }
 
     //printf("json data: %s\n", json.c_str());
     rapidjson::Document document;
     document.Parse(json.c_str());
 
-    printf("_____________________________________\n\n");
-    assert(document.HasMember("ip"));
-    assert(document["ip"].IsString());
-    printf("ip = %s\n", document["ip"].GetString());
-    assert(document.HasMember("city"));
-    assert(document["city"].IsString());
-    printf("City = %s\n", document["city"].GetString());
-    assert(document.HasMember("region"));
-    assert(document["region"].IsString());
-    printf("Region = %s\n", document["region"].GetString());
-    assert(document.HasMember("country"));
-    assert(document["country"].IsString());
-    printf("Country = %s\n", document["country"].GetString());
-    assert(document.HasMember("org"));
-    assert(document["org"].IsString());
-    printf("Org = %s\n", document["org"].GetString());
-    assert(document.HasMember("loc"));
-    assert(document["loc"].IsString());
-    printf("Location = %s\n", document["loc"].GetString());
-    assert(document.HasMember("timezone"));
-    assert(document["timezone"].IsString());
-    printf("Timezone = %s\n", document["timezone"].GetString());
-    printf("_____________________________________\n\n");  
+    if (document.HasParseError()) {
+        printf("Failed to parse JSON\n");
+        return 1; 
+    }
+
+    printOutput(document);
+
+
+
     return 0;
 }
 
@@ -68,18 +57,14 @@ std::string pullData(){
 
         // Read the response
         boost::asio::streambuf response;
-        //boost::asio::read_until(socket, response, "\r\n\r\n");
         boost::asio::read_until(socket, response, "}");
 
         // Extract the data from the streambuf,and store it in a string
         std::istream response_stream(&response);
         std::string response_string((std::istreambuf_iterator<char>(response_stream)), std::istreambuf_iterator<char>());
 
-        // Print the response using printf
-        //printf("Response\n%s\n\n", response_string.c_str());
-
         // Print the response
-        //std::cout << &response;
+        // cout << &response;
         return response_string;
 
     } catch (std::exception& e) {
@@ -90,3 +75,31 @@ std::string pullData(){
 }
 
 
+void printOutput(rapidjson::Document &document){
+
+    cout << "_____________________________________" << endl; 
+    if (document.HasMember("ip") && document["ip"].IsString()) {
+        cout << "IP = " << document["ip"].GetString() << endl;
+    }
+    if (document.HasMember("city") && document["city"].IsString()) {
+        cout << "City = " << document["city"].GetString() << endl;
+    }
+    if (document.HasMember("region") && document["region"].IsString()) {
+        cout << "Region = " << document["region"].GetString() << endl;
+    }
+    if (document.HasMember("country") && document["country"].IsString()) {
+        cout << "Country = " << document["country"].GetString() << endl;    
+    }
+    if (document.HasMember("org") && document["org"].IsString()) {
+        cout << "Org = " << document["org"].GetString() << endl;
+    }
+    if (document.HasMember("loc") && document["loc"].IsString()) {
+        cout << "Location = " << document["loc"].GetString() << endl;   
+    }
+    if (document.HasMember("timezone") && document["timezone"].IsString()) {
+        cout << "Timezone = " << document["timezone"].GetString() << endl;
+    }
+    cout << "_____________________________________" << endl;
+
+
+}
