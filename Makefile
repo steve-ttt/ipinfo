@@ -1,7 +1,7 @@
 # define the C compiler to use
 CC       = g++
 # define comipler flags
-CFLAGS   = -std=c11 -Wall -fmax-errors=10 -Wextra
+CFLAGS   = -std=c++23 -Wall -fmax-errors=10 -Wextra
 # define library paths in addition to /usr/lib
 LFLAGS   =  -lm -lboost_system -lboost_thread -lpthread
 # define libraries to use
